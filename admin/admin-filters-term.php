@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * manages filters and actions related to terms on admin side
  *
  * @since 1.2
@@ -10,7 +10,7 @@ class PLL_Admin_Filters_Term {
 	protected $pre_term_name; // used to store the term name before creating a slug if needed
 	protected $post_id; // used to store the current post_id when bulk editing posts
 
-	/*
+	/**
 	 * constructor: setups filters and actions
 	 *
 	 * @param object $polylang
@@ -59,7 +59,7 @@ class PLL_Admin_Filters_Term {
 		add_action( 'split_shared_term', array( &$this, 'split_shared_term' ), 10, 4 ); // WP 4.2
 	}
 
-	/*
+	/**
 	 * adds the language field in the 'Categories' and 'Post Tags' panels
 	 *
 	 * @since 0.1
@@ -88,7 +88,7 @@ class PLL_Admin_Filters_Term {
 				'name'     => 'term_lang_choice',
 				'value'    => 'term_id',
 				'selected' => $lang ? $lang->term_id : '',
-				'flag'     => true
+				'flag'     => true,
 			) ),
 			__( 'Sets the language', 'polylang' )
 		);
@@ -105,7 +105,7 @@ class PLL_Admin_Filters_Term {
 		echo '</div>'."\n";
 	}
 
-	/*
+	/**
 	 * adds the language field and translations tables in the 'Edit Category' and 'Edit Tag' panels
 	 *
 	 * @since 0.1
@@ -143,7 +143,7 @@ class PLL_Admin_Filters_Term {
 				'value'    => 'term_id',
 				'selected' => $lang ? $lang->term_id : '',
 				'disabled' => $disabled,
-				'flag'     => true
+				'flag'     => true,
 			) ),
 			__( 'Sets the language', 'polylang' )
 		);
@@ -155,7 +155,7 @@ class PLL_Admin_Filters_Term {
 		echo '</tr>'."\n";
 	}
 
-	/*
+	/**
 	 * translates term parent if exists when using "Add new" ( translation )
 	 *
 	 * @since 0.7
@@ -173,7 +173,7 @@ class PLL_Admin_Filters_Term {
 		return $output;
 	}
 
-	/*
+	/**
 	 * stores the current post_id when bulk editing posts for use in save_language and pre_term_slug
 	 *
 	 * @since 1.7
@@ -186,12 +186,12 @@ class PLL_Admin_Filters_Term {
 		}
 	}
 
-	/*
+	/**
 	 * allows to set a language by default for terms if it has no language yet
 	 *
 	 * @since 1.5.4
 	 *
-	 * @param int $term_id
+	 * @param int    $term_id
 	 * @param string $taxonomy
 	 */
 	protected function set_default_language( $term_id, $taxonomy ) {
@@ -206,12 +206,12 @@ class PLL_Admin_Filters_Term {
 		}
 	}
 
-	/*
+	/**
 	 * saves language
 	 *
 	 * @since 1.5
 	 *
-	 * @param int $term_id
+	 * @param int    $term_id
 	 * @param string $taxonomy
 	 */
 	protected function save_language( $term_id, $taxonomy ) {
@@ -306,7 +306,7 @@ class PLL_Admin_Filters_Term {
 		}
 	}
 
-	/*
+	/**
 	 * save translations from our form
 	 *
 	 * @since 1.5
@@ -330,14 +330,14 @@ class PLL_Admin_Filters_Term {
 		return $translations;
 	}
 
-	/*
+	/**
 	 * called when a category or post tag is created or edited
 	 * saves language and translations
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $term_id
-	 * @param int $tt_id term taxononomy id
+	 * @param int    $term_id
+	 * @param int    $tt_id    term taxononomy id
 	 * @param string $taxonomy
 	 */
 	public function save_term( $term_id, $tt_id, $taxonomy ) {
@@ -357,6 +357,15 @@ class PLL_Admin_Filters_Term {
 				$translations = $this->save_translations( $term_id );
 			}
 
+			/**
+			 * Fires after the term language and translations are saved
+			 *
+			 * @since 1.2
+			 *
+			 * @param int    $term_id      term id
+			 * @param string $taxonomy     taxonomy name
+			 * @param array  $translations the list of translations term ids
+			 */
 			do_action( 'pll_save_term', $term_id, $taxonomy, empty( $translations ) ? $this->model->term->get_translations( $term_id ) : $translations );
 		}
 
@@ -366,7 +375,7 @@ class PLL_Admin_Filters_Term {
 		}
 	}
 
-	/*
+	/**
 	 * stores the term name for use in pre_term_slug
 	 *
 	 * @since 0.9.5
@@ -378,7 +387,7 @@ class PLL_Admin_Filters_Term {
 		return $this->pre_term_name = $name;
 	}
 
-	/*
+	/**
 	 * creates the term slug in case the term already exists in another language
 	 *
 	 * @since 0.9.5
@@ -422,7 +431,7 @@ class PLL_Admin_Filters_Term {
 		return $slug;
 	}
 
-	/*
+	/**
 	 * called when a category or post tag is deleted
 	 * deletes language and translations
 	 *
@@ -435,7 +444,7 @@ class PLL_Admin_Filters_Term {
 		$this->model->term->delete_language( $term_id );
 	}
 
-	/*
+	/**
 	 * ajax response for edit term form
 	 *
 	 * @since 0.2
@@ -497,7 +506,7 @@ class PLL_Admin_Filters_Term {
 		$x->send();
 	}
 
-	/*
+	/**
 	 * ajax response for input in translation autocomplete input box
 	 *
 	 * @since 1.5
@@ -547,13 +556,13 @@ class PLL_Admin_Filters_Term {
 	}
 
 
-	/*
+	/**
 	 * get the language(s) to filter get_terms
 	 *
 	 * @since 1.7.6
 	 *
 	 * @param array $taxonomies queried taxonomies
-	 * @param array $args get_terms arguments
+	 * @param array $args       get_terms arguments
 	 * @return object|string|bool the language(s) to use in the filter, false otherwise
 	 */
 	protected function get_queried_language( $taxonomies, $args ) {
@@ -656,7 +665,7 @@ class PLL_Admin_Filters_Term {
 		return empty( $lang ) ? false : $lang;
 	}
 
-	/*
+	/**
 	 * adds language dependent cache domain when querying terms
 	 * useful as the 'lang' parameter is not included in cache key by WordPress
 	 *
@@ -674,14 +683,14 @@ class PLL_Admin_Filters_Term {
 		return $args;
 	}
 
-	/*
+	/**
 	 * filters categories and post tags by language(s) when needed on admin side
 	 *
 	 * @since 0.5
 	 *
-	 * @param array $clauses list of sql clauses
+	 * @param array $clauses    list of sql clauses
 	 * @param array $taxonomies list of taxonomies
-	 * @param array $args get_terms arguments
+	 * @param array $args       get_terms arguments
 	 * @return array modified sql clauses
 	 */
 	public function terms_clauses( $clauses, $taxonomies, $args ) {
@@ -689,7 +698,7 @@ class PLL_Admin_Filters_Term {
 		return ! empty( $lang ) ? $this->model->terms_clauses( $clauses, $lang ) : $clauses; // adds our clauses to filter by current language
 	}
 
-	/*
+	/**
 	 * hack to avoid displaying delete link for the default category in all languages
 	 * also returns the default category in the right language when called from wp_delete_term
 	 *
@@ -720,7 +729,7 @@ class PLL_Admin_Filters_Term {
 		return $value;
 	}
 
-	/*
+	/**
 	 * checks if the new default category is translated in all languages
 	 * if not, create the translations
 	 *
@@ -745,7 +754,7 @@ class PLL_Admin_Filters_Term {
 		}
 	}
 
-	/*
+	/**
 	 * updates the translations term ids when splitting a shared term
 	 * splits translations if these are shared terms too
 	 *

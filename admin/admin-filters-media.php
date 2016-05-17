@@ -1,13 +1,13 @@
 <?php
 
-/*
+/**
  * manages filters and actions related to media on admin side
  * capability to edit / create media is checked before loading this class
  *
  * @since 1.2
  */
 class PLL_Admin_Filters_Media extends PLL_Admin_Filters_Post_Base {
-	/*
+	/**
 	 * constructor: setups filters and actions
 	 *
 	 * @since 1.2
@@ -31,13 +31,13 @@ class PLL_Admin_Filters_Media extends PLL_Admin_Filters_Post_Base {
 		}
 	}
 
-	/*
+	/**
 	 * adds the language field and translations tables in the 'Edit Media' panel
 	 * needs WP 3.5+
 	 *
 	 * @since 0.9
 	 *
-	 * @param array $fields list of form fields
+	 * @param array  $fields list of form fields
 	 * @param object $post
 	 * @return array modified list of form fields
 	 */
@@ -63,12 +63,12 @@ class PLL_Admin_Filters_Media extends PLL_Admin_Filters_Post_Base {
 		return $fields;
 	}
 
-	/*
+	/**
 	 * creates a media translation
 	 *
 	 * @since 1.8
 	 *
-	 * @param int $post_id
+	 * @param int           $post_id
 	 * @param string|object $lang
 	 * @return int id of the translated media
 	 */
@@ -99,11 +99,20 @@ class PLL_Admin_Filters_Media extends PLL_Admin_Filters_Post_Base {
 		$translations[ $lang->slug ] = $tr_id;
 		$this->model->post->save_translations( $tr_id, $translations );
 
+		/**
+		 * Fires after a media translation is created
+		 *
+		 * @since 1.6.4
+		 *
+		 * @param int    $post_id post id of the source media
+		 * @param int    $tr_id   post id of the new media translation
+		 * @param string $slug    language code of the new translation
+		 */
 		do_action( 'pll_translate_media', $post_id, $tr_id, $lang->slug );
 		return $tr_id;
 	}
 
-	/*
+	/**
 	 * creates a media translation
 	 *
 	 * @since 0.9
@@ -125,7 +134,7 @@ class PLL_Admin_Filters_Media extends PLL_Admin_Filters_Post_Base {
 		exit;
 	}
 
-	/*
+	/**
 	 * called when a media is saved
 	 * saves language and translations
 	 *
@@ -149,7 +158,7 @@ class PLL_Admin_Filters_Media extends PLL_Admin_Filters_Post_Base {
 		return $post;
 	}
 
-	/*
+	/**
 	 * prevents WP deleting files when there are still media using them
 	 * thanks to Bruno "Aesqe" Babic and its plugin file gallery in which I took all the ideas for this function
 	 *

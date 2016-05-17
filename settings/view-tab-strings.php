@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * displays the strings translations tab in Polylang settings
  */
 

@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * setup filters common to admin and frontend
  *
  * @since 1.4
@@ -8,7 +8,7 @@
 class PLL_Filters {
 	public $links_model, $model, $options, $curlang;
 
-	/*
+	/**
 	 * constructor: setups filters
 	 *
 	 * @since 1.4
@@ -31,7 +31,7 @@ class PLL_Filters {
 		add_filter( 'language_attributes', array( &$this, 'language_attributes' ) );
 	}
 
-	/*
+	/**
 	 * filters the comments according to the current language
 	 * used by the recent comments widget and admin language filter
 	 *
@@ -70,7 +70,7 @@ class PLL_Filters {
 		return $clauses;
 	}
 
-	/*
+	/**
 	 * filters get_pages per language
 	 *
 	 * @since 1.4
@@ -103,7 +103,7 @@ class PLL_Filters {
 					'field'    => 'term_taxonomy_id', // since WP 3.5
 					'terms'    => $language->term_taxonomy_id,
 					'operator' => 'NOT IN',
-				) )
+				) ),
 			);
 
 			$args['exclude'] = array_merge( $args['exclude'], get_posts( $r ) );
@@ -130,7 +130,7 @@ class PLL_Filters {
 		return $pages;
 	}
 
-	/*
+	/**
 	 * converts WordPress locale to valid W3 locale in html language attributes
 	 *
 	 * @since 1.8

@@ -1,13 +1,13 @@
 <?php
 
-/*
+/**
  * manages copy and synchronization of terms and post metas
  *
  * @since 1.2
  */
 class PLL_Admin_Sync {
 
-	/*
+	/**
 	 * constructor
 	 *
 	 * @since 1.2
@@ -31,23 +31,26 @@ class PLL_Admin_Sync {
 		}
 	}
 
-	/*
+	/**
 	 * translate post parent if exists when using "Add new" ( translation )
 	 *
 	 * @since 0.6
+	 *
+	 * @param int $post_parent
+	 * @return int
 	 */
 	public function wp_insert_post_parent( $post_parent ) {
 		return isset( $_GET['from_post'], $_GET['new_lang'] ) && ( $id = wp_get_post_parent_id( (int) $_GET['from_post'] ) ) && ( $parent = $this->model->post->get_translation( $id, $_GET['new_lang'] ) ) ? $parent : $post_parent;
 	}
 
-	/*
+	/**
 	 * copy post metas, menu order, comment and ping status when using "Add new" ( translation )
 	 * formerly used dbx_post_advanced deprecated in WP 3.7
 	 *
 	 * @since 1.2
 	 *
 	 * @param string $post_type unused
-	 * @param object $post current post object
+	 * @param object $post      current post object
 	 */
 	public function add_meta_boxes( $post_type, $post ) {
 		if ( 'post-new.php' == $GLOBALS['pagenow'] && isset( $_GET['from_post'], $_GET['new_lang'] ) && $this->model->is_translated_post_type( $post->post_type ) ) {
@@ -69,7 +72,7 @@ class PLL_Admin_Sync {
 		}
 	}
 
-	/*
+	/**
 	 * get the list of taxonomies to copy or to synchronize
 	 *
 	 * @since 1.7
@@ -83,16 +86,24 @@ class PLL_Admin_Sync {
 			$taxonomies[] = 'post_format';
 		}
 
+		/**
+		 * Filter the taxonomies to copy or synchronize
+		 *
+		 * @since 1.7
+		 *
+		 * @param array $taxonomies list of taxonomy names
+		 * @param bool  $sync       true if it is synchronization, false if it is a copy
+		 */
 		return array_unique( apply_filters( 'pll_copy_taxonomies', $taxonomies, $sync ) );
 	}
 
-	/*
+	/**
 	 * copy or synchronize terms
 	 *
 	 * @since 1.8
 	 *
-	 * @param int $from id of the post from which we copy informations
-	 * @param int $to id of the post to which we paste informations
+	 * @param int    $from id of the post from which we copy informations
+	 * @param int    $to   id of the post to which we paste informations
 	 * @param string $lang language slug
 	 * @param bool $sync true if it is synchronization, false if it is a copy, defaults to false
 	 */
@@ -141,13 +152,13 @@ class PLL_Admin_Sync {
 		}
 	}
 
-	/*
+	/**
 	 * copy or synchronize metas (custom fields)
 	 *
 	 * @since 0.9
 	 *
-	 * @param int $from id of the post from which we copy informations
-	 * @param int $to id of the post to which we paste informations
+	 * @param int    $from id of the post from which we copy informations
+	 * @param int    $to   id of the post to which we paste informations
 	 * @param string $lang language slug
 	 * @param bool $sync true if it is synchronization, false if it is a copy, defaults to false
 	 */
@@ -171,6 +182,14 @@ class PLL_Admin_Sync {
 			}
 		}
 
+		/**
+		 * Filter the custom fields to copy or synchronize
+		 *
+		 * @since 0.6
+		 *
+		 * @param array $keys list of custom fields names
+		 * @param bool  $sync true if it is synchronization, false if it is a copy
+		 */
 		$keys = array_unique( apply_filters( 'pll_copy_post_metas', empty( $keys ) ? array() : $keys, $sync ) );
 
 		// and now copy / synchronize
@@ -188,14 +207,14 @@ class PLL_Admin_Sync {
 		}
 	}
 
-	/*
+	/**
 	 * synchronizes terms and metas in translations
 	 *
 	 * @since 1.2
 	 *
-	 * @param int $post_id post id
-	 * @param object $post post object
-	 * @param array translations post translations
+	 * @param int    $post_id      post id
+	 * @param object $post         post object
+	 * @param array  $translations post translations
 	 */
 	public function pll_save_post( $post_id, $post, $translations ) {
 		global $wpdb;
@@ -247,14 +266,14 @@ class PLL_Admin_Sync {
 		}
 	}
 
-	/*
+	/**
 	 * synchronize translations of a term in all posts
 	 *
 	 * @since 1.2
 	 *
-	 * @param int $term_id term id
-	 * @param string $taxonomy taxonomy name of the term
-	 * @param array $translations translations of the term
+	 * @param int    $term_id      term id
+	 * @param string $taxonomy     taxonomy name of the term
+	 * @param array  $translations translations of the term
 	 */
 	public function pll_save_term( $term_id, $taxonomy, $translations ) {
 		// check if the taxonomy is synchronized
@@ -273,7 +292,7 @@ class PLL_Admin_Sync {
 				'taxonomy' => $taxonomy,
 				'field'    => 'id',
 				'terms'    => array_merge( array( $term_id ), array_values( $translations ) ),
-			) )
+			) ),
 		) );
 
 		// associate translated term to translated post
@@ -313,7 +332,7 @@ class PLL_Admin_Sync {
 		}
 	}
 
-	/*
+	/**
 	 * synchronizes terms and metas in translations for media
 	 *
 	 * @since 1.8

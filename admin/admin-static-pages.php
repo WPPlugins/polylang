@@ -1,13 +1,13 @@
 <?php
 
-/*
+/**
  * manages the static front page and the page for posts on admin side
  *
  * @since 1.8
  */
 class PLL_Admin_Static_Pages extends PLL_Static_Pages {
 
-	/*
+	/**
 	 * constructor: setups filters and actions
 	 *
 	 * @since 1.8
@@ -27,7 +27,7 @@ class PLL_Admin_Static_Pages extends PLL_Static_Pages {
 		add_filter( 'pre_update_option_page_on_front', array( &$this, 'update_page_on_front' ), 10, 2 );
 	}
 
-		/*
+	/**
 	 * add post state for translations of the front page and posts page
 	 *
 	 * @since 1.8
@@ -48,7 +48,7 @@ class PLL_Admin_Static_Pages extends PLL_Static_Pages {
 		return $post_states;
 	}
 
-	/*
+	/**
 	 * refresh language cache when a static front page has been translated
 	 *
 	 * @since 1.8
@@ -63,7 +63,7 @@ class PLL_Admin_Static_Pages extends PLL_Static_Pages {
 		}
 	}
 
-	/*
+	/**
 	 * prevents choosing an untranslated static front page
 	 * displays an error message
 	 *

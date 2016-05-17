@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * manages links related functions
  *
  * @since 1.2
@@ -8,7 +8,7 @@
 class PLL_Links {
 	public $links_model, $model, $options;
 
-	/*
+	/**
 	 * constructor
 	 *
 	 * @since 1.2
@@ -21,7 +21,7 @@ class PLL_Links {
 		$this->options = &$polylang->options;
 	}
 
-	/*
+	/**
 	 * returns the home url in the requested language
 	 *
 	 * @since 1.3
@@ -34,7 +34,7 @@ class PLL_Links {
 		return $is_search ? $language->search_url : $language->home_url;
 	}
 
-	/*
+	/**
 	 * checks if the current user can read the post
 	 *
 	 * @since 1.5
