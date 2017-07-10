@@ -50,7 +50,7 @@ abstract class PLL_Translated_Object {
 			$taxonomies = array( $this->tax_language, $this->tax_translations );
 
 			// query terms
-			foreach ( wp_get_object_terms( $object_id, $taxonomies ) as $t ) {
+			foreach ( wp_get_object_terms( $object_id, $taxonomies, array( 'update_term_meta_cache' => false ) ) as $t ) {
 				$terms[ $t->taxonomy ] = $t;
 				if ( $t->taxonomy == $taxonomy ) {
 					$term = $t;
@@ -177,7 +177,9 @@ abstract class PLL_Translated_Object {
 		$translations = empty( $term ) ? array() : unserialize( $term->description );
 
 		// make sure we return only translations ( thus we allow plugins to store other informations in the array )
-		$translations = array_intersect_key( $translations, array_flip( $this->model->get_languages_list( array( 'fields' => 'slug' ) ) ) );
+		if ( is_array( $translations ) ) {
+			$translations = array_intersect_key( $translations, array_flip( $this->model->get_languages_list( array( 'fields' => 'slug' ) ) ) );
+		}
 
 		// make sure to return at least the passed post or term in its translation array
 		if ( empty( $translations ) && $lang = $this->get_language( $id ) ) {

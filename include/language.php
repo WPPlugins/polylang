@@ -80,7 +80,6 @@ class PLL_Language {
 			$this->description = &$this->locale; // backward compatibility with Polylang < 1.2
 
 			$this->mo_id = PLL_MO::get_id( $this );
-			$this->set_flag();
 		}
 	}
 
@@ -94,20 +93,21 @@ class PLL_Language {
 
 		// Polylang builtin flags
 		if ( ! empty( $this->flag_code ) && file_exists( POLYLANG_DIR . ( $file = '/flags/' . $this->flag_code . '.png' ) ) ) {
-			$flags['flag']['url'] = esc_url_raw( POLYLANG_URL . $file );
+			$flags['flag']['url'] = esc_url_raw( plugins_url( $file, POLYLANG_FILE ) );
 
 			// if base64 encoded flags are preferred
 			if ( ! defined( 'PLL_ENCODED_FLAGS' ) || PLL_ENCODED_FLAGS ) {
 				$flags['flag']['src'] = 'data:image/png;base64,' . base64_encode( file_get_contents( POLYLANG_DIR . $file ) );
 			} else {
-				$flags['flag']['src'] = esc_url( POLYLANG_URL . $file );
+				$flags['flag']['src'] = esc_url( plugins_url( $file, POLYLANG_FILE ) );
 			}
 		}
 
 		// custom flags ?
 		if ( file_exists( PLL_LOCAL_DIR . ( $file = '/' . $this->locale . '.png' ) ) || file_exists( PLL_LOCAL_DIR . ( $file = '/' . $this->locale . '.jpg' ) ) ) {
-			$flags['custom_flag']['url'] = esc_url_raw( PLL_LOCAL_URL . $file );
-			$flags['custom_flag']['src'] = esc_url( PLL_LOCAL_URL . $file );
+			$url = content_url( '/polylang' . $file );
+			$flags['custom_flag']['url'] = esc_url_raw( $url );
+			$flags['custom_flag']['src'] = esc_url( $url );
 		}
 
 		/**
@@ -223,17 +223,19 @@ class PLL_Language {
 	public function get_locale( $filter = 'raw' ) {
 		if ( 'display' == $filter ) {
 			static $valid_locales = array(
-				'bel'          => 'be',
-				'bre'          => 'br',
-				'de_DE_formal' => 'de_DE',
-				'dzo'          => 'dz',
-				'ido'          => 'io',
-				'kin'          => 'rw',
-				'oci'          => 'oc',
-				'mri'          => 'mi',
-				'roh'          => 'rm',
-				'srd'          => 'sc',
-				'tuk'          => 'tk',
+				'bel'            => 'be',
+				'bre'            => 'br',
+				'de_CH_informal' => 'de_CH',
+				'de_DE_formal'   => 'de_DE',
+				'dzo'            => 'dz',
+				'ido'            => 'io',
+				'kin'            => 'rw',
+				'oci'            => 'oc',
+				'mri'            => 'mi',
+				'nl_NL_formal'   => 'nl_NL',
+				'roh'            => 'rm',
+				'srd'            => 'sc',
+				'tuk'            => 'tk',
 			 );
 			$locale = isset( $valid_locales[ $this->locale ] ) ? $valid_locales[ $this->locale ] : $this->locale;
 			return str_replace( '_', '-', $locale );
